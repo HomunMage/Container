@@ -1,0 +1,9 @@
+services:
+  whisper:
+    build:
+      context: .
+    volumes:
+      - ./workspace:/home/myuser/workspace
+    restart: unless-stopped  # Automatically restart the container unless stopped manually
+    stdin_open: true  # Keep stdin open (optional)
+    tty: true         # Allocate a pseudo-TTY
