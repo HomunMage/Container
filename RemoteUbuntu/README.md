@@ -22,4 +22,4 @@ for create a docker that can use ssh to remote into this container
 
 
 
-<script src="https://posetmage.com/assets/js/LoadAsCodeSession.js"></script>
+<script src="https://posetmage.com/cdn/js/LoadAsCodeSession.js"></script>
