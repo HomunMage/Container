@@ -1,4 +1,4 @@
-# NVIDIA Docker 
+# NVIDIA Docker with Ollama
 
 Use ollama as example:
 
