@@ -1,10 +1,8 @@
 # Hold Image Registry at local
 
-This document outlines two methods for setting up a local Docker image registry: using a standalone Docker container and using Kubernetes.
+It's strongly discouraged to expose this registry to a public network due to security concerns. The examples provided here focus on making the registry accessible only via `localhost`. This approach keeps your images secure while allowing you to easily test Docker builds and deployments locally.
 
 ## Hold and Mount
-
-Both methods achieve the same goal: to run a private Docker registry and persist its data to a local directory.  The key difference is the deployment environment: Docker directly or Kubernetes for orchestration.
 
 #### docker solution:
 ```bash
@@ -17,11 +15,11 @@ docker run --rm -d -p 127.0.0.1:7000:5000 -v "$(pwd)/images:/var/lib/registry" -
   Loading content...
 </div>
 
+command:
 ```bash
 kubectl apply -f local-registry.yaml
 tmux new -s registry-forward
 kubectl port-forward --address 127.0.0.1 service/local-registry 7000:5000
-
 ```
 
 ## try and use
@@ -29,7 +27,6 @@ kubectl port-forward --address 127.0.0.1 service/local-registry 7000:5000
 ```bash
 curl -v http://127.0.0.1:7000/v2/
 curl -v http://127.0.0.1:7000/v2/_catalog
-
 ```
 
 example push command
