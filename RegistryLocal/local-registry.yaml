@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: local-registry
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: local-registry
+  template:
+    metadata:
+      labels:
+        app: local-registry
+    spec:
+      containers:
+      - name: registry
+        image: registry:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5000
+          name: http
+        volumeMounts:  # Mount the volume
+        - name: registry-data
+          mountPath: /var/lib/registry  # Standard registry data directory
+
+      volumes:  # Define the volume
+      - name: registry-data
+        hostPath: # Use hostPath
+          path: <pwd>/registry-data # ABSOLUTE PATH HERE
+          type: DirectoryOrCreate
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: local-registry
+spec:
+  selector:
+    app: local-registry
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+  type: NodePort
