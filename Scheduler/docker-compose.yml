@@ -1,8 +1,0 @@
-services:
-  ccxt:
-    build:
-      context: ./ccxt
-    volumes:
-      - ./ccxt/src:/app/src/
-      - ./ccxt/daily.sh:/app/daily.sh
-      - ./ccxt/setting.sh:/app/setting.sh

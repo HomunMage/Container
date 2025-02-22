@@ -1,0 +1,9 @@
+# Example crontab file
+
+# Run a script every minute - logging to cron.log
+* * * * * echo "This runs every minute" >> /var/log/cron.log 2>&1
+
+# Run a script every minute - simple output
+* * * * * echo "print every minute"
+
+# final line need for EOF
