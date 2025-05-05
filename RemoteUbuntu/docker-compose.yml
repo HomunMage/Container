@@ -1,0 +1,12 @@
+services:
+  ubuntu-ssh:
+    build: .  # Assuming your Dockerfile is in the same directory as docker-compose.yml
+    image: ubuntu-ssh
+    container_name: ubuntu-ssh
+    ports:
+      - "5679:22"
+    volumes:
+      - ./:/home/ubuntu/app/
+    working_dir: /home/ubuntu/app/
+    stdin_open: true
+    tty: true

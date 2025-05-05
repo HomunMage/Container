@@ -6,13 +6,13 @@ spec:
   containers:
     - name: ubuntu-ssh-container
       image: ubuntu-ssh:latest
-      workingDir: /home/{SSH_USERNAME}/app
+      workingDir: /home/ubuntu/app
       ports:
         - containerPort: 22
           hostPort: 5679
       volumeMounts:
         - name: ssh-volume
-          mountPath: /home/{SSH_USERNAME}/.ssh/
+          mountPath: /home/ubuntu/.ssh/
       securityContext:
         capabilities:
           add: ["CAP_SYS_ADMIN"]
