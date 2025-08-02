@@ -5,6 +5,8 @@ services:
       context: ./ollama
     ports:
       - "127.0.0.1:11434:11434"
+    volumes:
+      - <home>/.ollama/:/home/ubuntu/.ollama/ # reuse download paramaters
     deploy:
       resources:
         reservations:

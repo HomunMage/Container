@@ -5,6 +5,10 @@ services:
     container_name: nv-ssh
     ports:
       - "5566:22"
+    volumes:
+      - ./.vscode-server/:/home/ubuntu/.vscode-server/
+      - ./.ssh/:/home/ubuntu/.ssh/:ro  # Ensure this directory exists and has authorized_keys
+    working_dir: /home/ubuntu/app
     deploy:
       resources:
         reservations:

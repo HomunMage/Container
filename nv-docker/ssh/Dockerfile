@@ -1,38 +1,26 @@
-# Use the NVIDIA CUDA image as the base
-FROM nvidia/cuda:12.2.0-base-ubuntu22.04
+# Use the official Ubuntu image as the base
+FROM nvidia/cuda:12.8.1-cudnn-devel-ubuntu24.04
 
 # Install SSH server and sudo
-RUN apt-get update && apt-get install -y openssh-server sudo git curl
-RUN DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
+RUN apt-get update && apt-get install -y openssh-server sudo supervisor
 
-# Set up the user and add to sudo group
-ARG SSH_USERNAME
-ARG SSH_PASSWORD
-RUN useradd -m -s /bin/bash ${SSH_USERNAME} && \
-    echo "${SSH_USERNAME}:${SSH_PASSWORD}" | chpasswd && \
-    adduser ${SSH_USERNAME} sudo
+# Allow 'ubuntu' user to sudo without a password
+RUN echo "ubuntu ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers.d/ubuntu
 
 # Set up SSH to accept connections
 RUN mkdir /var/run/sshd
 RUN echo 'PermitRootLogin no' >> /etc/ssh/sshd_config
 RUN echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config
-RUN echo "AllowUsers ${SSH_USERNAME}" >> /etc/ssh/sshd_config
-RUN mkdir -p /home/${SSH_USERNAME}/.ssh
-RUN chown ${SSH_USERNAME}:${SSH_USERNAME} /home/${SSH_USERNAME}/.ssh
-RUN chmod 700 /home/${SSH_USERNAME}/.ssh
+RUN echo "AllowUsers ubuntu" >> /etc/ssh/sshd_config
+RUN mkdir -p /home/ubuntu/.ssh
+RUN chown ubuntu:ubuntu /home/ubuntu/.ssh
 
-COPY ./.ssh/authorized_keys /home/${SSH_USERNAME}/.ssh/authorized_keys
-RUN chown ${SSH_USERNAME}:${SSH_USERNAME} /home/${SSH_USERNAME}/.ssh/authorized_keys && \
-    chmod 600 /home/${SSH_USERNAME}/.ssh/authorized_keys
+COPY ./.ssh/authorized_keys /home/ubuntu/.ssh/authorized_keys
+RUN chown ubuntu:ubuntu /home/ubuntu/.ssh/authorized_keys
+RUN chmod 600 /home/ubuntu/.ssh/authorized_keys
 
-# Copy the entry point script into the Docker image
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+# Copy the supervisord configuration
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Make sure the script is executable
-RUN chmod +x /usr/local/bin/entrypoint.sh
-
-# Use the entry point script to start the SSH service and any other services
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-
-# Default command (you can override this in `docker run`)
-CMD ["/usr/sbin/sshd", "-D"]
+# Start supervisord
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
