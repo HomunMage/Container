@@ -9,7 +9,7 @@ you need nv container
   Loading content...
 </div>
 
-the file supervisord.conf:
+supervisord.conf:
 <div class="load_as_code_session" data-url="supervisord.conf">
   Loading content...
 </div>
